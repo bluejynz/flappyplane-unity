@@ -622,6 +622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 564f2db032bde8b469ea5d9caf64e069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  featherParticles: {fileID: 7631706502947337463, guid: 5b50643f5649fe14a9a187d58c509418, type: 3}
 --- !u!95 &1772293995
 Animator:
   serializedVersion: 5

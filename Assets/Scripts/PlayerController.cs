@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 jumpStrength;
     private float playerPos;
 
+    public GameObject featherParticles;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +33,10 @@ public class PlayerController : MonoBehaviour
 
             playerRB.velocity = new Vector2(0f, 0f);
             playerRB.AddForce(jumpStrength);
+
+            GameObject particle = Instantiate(featherParticles);
+            Vector3 offsetPos = this.transform.position + new Vector3(0, 1f, 0);
+            particle.transform.position = offsetPos;
         }
 
         playerPos = Camera.main.WorldToScreenPoint(transform.position).y;
