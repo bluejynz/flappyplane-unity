@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private bool isGamePlaying;
-    private bool isGameOver;
     private Rigidbody2D playerRB;
     private Vector2 jumpStrength;
     private float playerPos;
@@ -15,7 +13,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isGamePlaying = false;
+        GameManager.isGamePlaying = false;
         playerRB = GetComponent<Rigidbody2D>();
         jumpStrength = new Vector2(0f, 500f);
     }
@@ -23,11 +21,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1") && !isGameOver)
+        if (Input.GetButtonDown("Fire1") && !GameManager.isGameOver)
         {
-            if (!isGamePlaying)
+            if (!GameManager.isGamePlaying)
             {
-                isGamePlaying = true;
+                GameManager.isGamePlaying = true;
                 playerRB.isKinematic = false;
             }
 
@@ -43,7 +41,7 @@ public class PlayerController : MonoBehaviour
 
         if (playerPos > Screen.height)
         {
-            isGameOver = true;
+            GameManager.isGameOver = true;
         }
 
         transform.rotation = Quaternion.Euler(0f, 0f, playerRB.velocity.y * 3f);

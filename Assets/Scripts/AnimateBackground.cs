@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class AnimateBackground : MonoBehaviour
 {
-    private float screenWidthRatio;
-    private float screenHeightRatio;
     private float imgWidth;
     private float imgHeight;
     private SpriteRenderer spriteRenderer;
@@ -18,16 +16,13 @@ public class AnimateBackground : MonoBehaviour
       imgWidth = spriteRenderer.sprite.bounds.size.x;
       imgHeight = spriteRenderer.sprite.bounds.size.y;
 
-      screenHeightRatio = Camera.main.orthographicSize * 2f;
-      screenWidthRatio = screenHeightRatio / Screen.height * Screen.width;
-
       newSize = transform.localScale;
-      newSize.x = screenWidthRatio / imgWidth + .1f;
-      newSize.y = screenHeightRatio / imgHeight;
+      newSize.x = GameManager.screenWidthRatio / imgWidth + .1f;
+      newSize.y = GameManager.screenHeightRatio / imgHeight;
       transform.localScale = newSize;
 
       if(name == "BackgroundImage2") {
-        transform.position = new Vector2(screenWidthRatio, 0f);
+        transform.position = new Vector2(GameManager.screenWidthRatio, 0f);
       }
       
       GetComponent<Rigidbody2D>().velocity = new Vector2(-3, 0f);
@@ -35,8 +30,8 @@ public class AnimateBackground : MonoBehaviour
 
     // Update is called once per frame
     void Update() { 
-      if(transform.position.x <= -screenWidthRatio) {
-        transform.position = new Vector2(screenWidthRatio, 0f);
+      if(transform.position.x <= -GameManager.screenWidthRatio) {
+        transform.position = new Vector2(GameManager.screenWidthRatio, 0f);
       }
     }
 }
