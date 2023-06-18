@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D playerRB;
     private Vector2 jumpStrength;
-    private float playerPos;
+    private float playerPosMax;
+    private float playerPosMin;
 
     public GameObject featherParticles;
 
@@ -27,9 +28,10 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.isGamePlaying = true;
                 playerRB.isKinematic = false;
+                GetComponent<Collider2D>().enabled = true;
             }
 
-            playerRB.velocity = new Vector2(0f, 0f);
+            playerRB.velocity = Vector2.zero;
             playerRB.AddForce(jumpStrength);
 
             GameObject particle = Instantiate(featherParticles);
@@ -37,13 +39,35 @@ public class PlayerController : MonoBehaviour
             particle.transform.position = offsetPos;
         }
 
-        playerPos = Camera.main.WorldToScreenPoint(transform.position).y;
+        playerPosMax = Camera.main.WorldToScreenPoint(transform.position + GetComponent<SpriteRenderer>().bounds.size).y;
+        playerPosMin = Camera.main.WorldToScreenPoint(transform.position - GetComponent<SpriteRenderer>().bounds.size).y;
 
-        if (playerPos > Screen.height)
+        if (playerPosMax > Screen.height || playerPosMin < 0)
         {
-            GameManager.isGameOver = true;
+            KillPlayer();
         }
 
         transform.rotation = Quaternion.Euler(0f, 0f, playerRB.velocity.y * 3f);
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        KillPlayer();
+    }
+
+    void KillPlayer()
+    {
+        if (!GameManager.isGameOver)
+        {
+          Debug.Log("Game Over");
+            GameManager.isGameOver = true;
+            GameManager.isGamePlaying = false;
+
+            GetComponent<Collider2D>().enabled = false;
+            playerRB.velocity = Vector2.zero;
+            playerRB.AddForce(new Vector2(-300f, 0f));
+            playerRB.AddTorque(300f);
+            GetComponent<SpriteRenderer>().color = new Color(1f, .35f, .35f);
+        }
     }
 }
