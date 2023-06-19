@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private float playerPosMin;
 
     public GameObject featherParticles;
+    public GameObject scoreText;
 
     // Start is called before the first frame update
     void Start()
@@ -39,11 +41,22 @@ public class PlayerController : MonoBehaviour
             particle.transform.position = offsetPos;
         }
 
-        playerPosMax = Camera.main.WorldToScreenPoint(transform.position + GetComponent<SpriteRenderer>().bounds.size).y;
-        playerPosMin = Camera.main.WorldToScreenPoint(transform.position - GetComponent<SpriteRenderer>().bounds.size).y;
+        playerPosMax = Camera.main
+            .WorldToScreenPoint(
+                transform.position + (GetComponent<SpriteRenderer>().bounds.size / 2f)
+            )
+            .y;
+        playerPosMin = Camera.main
+            .WorldToScreenPoint(
+                transform.position - (GetComponent<SpriteRenderer>().bounds.size / 2f)
+            )
+            .y;
 
-        if (playerPosMax > Screen.height || playerPosMin < 0)
+        if (playerPosMax - 40f > Screen.height || playerPosMin + 40f < 0 && GameManager.isGamePlaying)
         {
+            Debug.Log(
+                $"Player position max: {playerPosMax} | Screen height: {Screen.height}\nPlayer position min: {playerPosMin} | 0"
+            );
             KillPlayer();
         }
 
@@ -52,14 +65,17 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        KillPlayer();
+        if (other.gameObject.tag == "Enemy")
+        {
+            KillPlayer();
+        }
     }
 
     void KillPlayer()
     {
         if (!GameManager.isGameOver)
         {
-          Debug.Log("Game Over");
+            Debug.Log("Game Over");
             GameManager.isGameOver = true;
             GameManager.isGamePlaying = false;
 
@@ -69,5 +85,10 @@ public class PlayerController : MonoBehaviour
             playerRB.AddTorque(300f);
             GetComponent<SpriteRenderer>().color = new Color(1f, .35f, .35f);
         }
+    }
+
+    void Score() {
+      GameManager.score++;
+      scoreText.GetComponent<TextMeshProUGUI>().text = $"Score: {GameManager.score}";
     }
 }
